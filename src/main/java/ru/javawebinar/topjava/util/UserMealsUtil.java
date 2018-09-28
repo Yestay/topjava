@@ -30,10 +30,13 @@ public class UserMealsUtil {
 
 
         List<UserMeal> listFiltered = new ArrayList<>();
-        Map<LocalDate, Integer> mapDayCalories = new HashMap<>();
+        Map<LocalDate, Integer> mapCaloriesByDay = new HashMap<>();
 
         for (UserMeal x : mealList) {
-            mapDayCalories.merge(x.getDateTime().toLocalDate(), x.getCalories(), (a, b) -> a + b);
+            // Collect caloriesByDay
+            mapCaloriesByDay.merge(x.getDateTime().toLocalDate(), x.getCalories(), (a, b) -> a + b);
+
+            // Apply filter startTime and endTime
             if ((x.getDateTime().toLocalTime().isAfter(startTime)) && x.getDateTime().toLocalTime().isBefore(endTime))
                 listFiltered.add(x);
         }
@@ -42,9 +45,11 @@ public class UserMealsUtil {
         List<UserMealWithExceed> result = new ArrayList<>();
         for (UserMeal x : listFiltered
         ) {
+
             UserMealWithExceed userMealWithExceed = new UserMealWithExceed(x.getDateTime(),
                     x.getDescription(), x.getCalories(),
-                    mapDayCalories.get(x.getDateTime().toLocalDate()) > caloriesPerDay);
+                    mapCaloriesByDay.get(x.getDateTime().toLocalDate()) > caloriesPerDay);
+
             result.add(userMealWithExceed);
         }
            return result;
