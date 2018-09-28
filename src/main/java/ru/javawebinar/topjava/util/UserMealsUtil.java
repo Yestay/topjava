@@ -43,14 +43,14 @@ public class UserMealsUtil {
 
 
         List<UserMealWithExceed> result = new ArrayList<>();
-        for (UserMeal x : listFiltered
+        for (UserMeal x : listFiltered// Run through the filtered list
         ) {
-
+            //Create a new instance of UserMealWithExceed
             UserMealWithExceed userMealWithExceed = new UserMealWithExceed(x.getDateTime(),
                     x.getDescription(), x.getCalories(),
                     mapCaloriesByDay.get(x.getDateTime().toLocalDate()) > caloriesPerDay);
 
-            result.add(userMealWithExceed);
+            result.add(userMealWithExceed);//add the newly created object to result list
         }
            return result;
     }
