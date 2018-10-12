@@ -1,33 +1,29 @@
 package ru.javawebinar.topjava.web;
 
+import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.MealWithExceed;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.Arrays;
-import java.util.List;
+        import java.io.IOException;
+
+        import java.time.LocalDateTime;
+        import java.time.LocalTime;
+        import java.time.Month;
+        import java.util.Arrays;
+        import java.util.List;
+
+        import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
+    private static final Logger log = getLogger(UserServlet.class);
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.getWriter().println("Hello");
-        //request.setAttribute("name","hi");
-        response.setContentType("text/html;charset=utf-8");
-        PrintWriter pw = response.getWriter();
-        pw.println("<H1>Hello, world! или Привет мир</H1>");
-       // response.sendRedirect("meals.jsp");
-        request.getRequestDispatcher("/meals.jsp").forward(request, response);
-
-
-        pw.println("<B>Список групп</B>");
-        pw.println("<table border=1>");
+        log.info("getAll");
 
         List<Meal> meals = Arrays.asList(
                 new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
@@ -37,19 +33,9 @@ public class MealServlet extends HttpServlet {
                 new Meal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
                 new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
         );
-        try {
-            for (Meal meal : meals) {
-                pw.println("<tr>");
-                pw.println("<td color=red>" + meal.getDate()+ "</td>");
-                pw.println("<td>" + meal.getDescription() + "</td>");
-                pw.println("<td>" +meal.getDateTime() + "</td>");
-                pw.println("<td>" + meal.getCalories() + "</td>");
-                pw.println("</tr>");
-            }
-        } catch (Exception e) {
-            throw new ServletException(e);
-        }
-        pw.println("</table>");
 
+        List<MealWithExceed> mealWithExceeds = MealsUtil.getFilteredWithExceeded(meals, LocalTime.MIDNIGHT, LocalTime.MAX, 2000);
+        request.setAttribute("list", mealWithExceeds);
+        request.getRequestDispatcher("/meals.jsp").forward(request, response);
     }
 }
