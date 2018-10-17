@@ -42,8 +42,8 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public List<MealWithExceed> getAll(Integer userId) {
-        return MealsUtil.getWithExceeded(repository.getAll(userId), SecurityUtil.authUserCaloriesPerDay());
+    public List<MealWithExceed> getAll(Integer userId, int caloriesPerDay) {
+        return MealsUtil.getWithExceeded(repository.getAll(userId), caloriesPerDay);
     }
 
 

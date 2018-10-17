@@ -11,7 +11,7 @@ public interface MealService {
     void delete(Integer userId,int id) throws NotFoundException;
     Meal get(Integer userId, int id) throws NotFoundException;
     void update(Integer userId, Meal meal);
-    List<MealWithExceed> getAll(Integer userId);
+    List<MealWithExceed> getAll(Integer userId, int caloriesPerDay);
 
 
 }
